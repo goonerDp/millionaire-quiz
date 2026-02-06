@@ -1,7 +1,31 @@
 @import "modern-normalize/modern-normalize.css";
 
+:root {
+  /* Orange */
+  --orange-120: #E87928;
+  --orange-100: #FF8B37;
+  --orange-80: #FFAC70;
+  --orange-5: #FFF3EB;
+
+  /* Green */
+  --green-100: #47D867;
+  --green-5: #E6FAEA;
+
+  /* Red */
+  --red-100: #EC6259;
+  --red-5: #FDEEED;
+
+  /* Black */
+  --black-100: #1C1C21;
+  --black-40: #D0D0D8;
+  --black-5: #F5F5F7;
+
+  /* White */
+  --white-100: #FFFFFF;
+}
+
 body {
-  color: var(--foreground);
+  color: var(--black-100);
   background: var(--background);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
