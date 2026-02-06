@@ -1,0 +1,125 @@
+{
+  "prizes": [500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000],
+  "questions": [
+    {
+      "id": 1,
+      "text": "What is the capital of France?",
+      "answers": [
+        { "id": "A", "text": "Berlin", "correct": false },
+        { "id": "B", "text": "Madrid", "correct": false },
+        { "id": "C", "text": "Paris", "correct": true },
+        { "id": "D", "text": "Rome", "correct": false }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "How many continents are there?",
+      "answers": [
+        { "id": "A", "text": "Five", "correct": false },
+        { "id": "B", "text": "Six", "correct": false },
+        { "id": "C", "text": "Seven", "correct": true },
+        { "id": "D", "text": "Eight", "correct": false }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "What is the largest planet in our solar system?",
+      "answers": [
+        { "id": "A", "text": "Mars", "correct": false },
+        { "id": "B", "text": "Saturn", "correct": false },
+        { "id": "C", "text": "Jupiter", "correct": true },
+        { "id": "D", "text": "Neptune", "correct": false }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "In which year did World War II end?",
+      "answers": [
+        { "id": "A", "text": "1943", "correct": false },
+        { "id": "B", "text": "1944", "correct": false },
+        { "id": "C", "text": "1945", "correct": true },
+        { "id": "D", "text": "1946", "correct": false }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "What is the chemical symbol for gold?",
+      "answers": [
+        { "id": "A", "text": "Go", "correct": false },
+        { "id": "B", "text": "Gd", "correct": false },
+        { "id": "C", "text": "Au", "correct": true },
+        { "id": "D", "text": "Ag", "correct": false }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "Who wrote \"Romeo and Juliet\"?",
+      "answers": [
+        { "id": "A", "text": "Charles Dickens", "correct": false },
+        { "id": "B", "text": "William Shakespeare", "correct": true },
+        { "id": "C", "text": "Jane Austen", "correct": false },
+        { "id": "D", "text": "Mark Twain", "correct": false }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "What is the smallest prime number?",
+      "answers": [
+        { "id": "A", "text": "0", "correct": false },
+        { "id": "B", "text": "1", "correct": false },
+        { "id": "C", "text": "2", "correct": true },
+        { "id": "D", "text": "3", "correct": false }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "Which ocean is the largest?",
+      "answers": [
+        { "id": "A", "text": "Atlantic", "correct": false },
+        { "id": "B", "text": "Indian", "correct": false },
+        { "id": "C", "text": "Arctic", "correct": false },
+        { "id": "D", "text": "Pacific", "correct": true }
+      ]
+    },
+    {
+      "id": 9,
+      "text": "How many sides does a hexagon have?",
+      "answers": [
+        { "id": "A", "text": "Five", "correct": false },
+        { "id": "B", "text": "Six", "correct": true },
+        { "id": "C", "text": "Seven", "correct": false },
+        { "id": "D", "text": "Eight", "correct": false }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "What is the longest river in the world?",
+      "answers": [
+        { "id": "A", "text": "Amazon", "correct": false },
+        { "id": "B", "text": "Nile", "correct": true },
+        { "id": "C", "text": "Yangtze", "correct": false },
+        { "id": "D", "text": "Mississippi", "correct": false }
+      ]
+    },
+    {
+      "id": 11,
+      "text": "In which country did the Renaissance begin?",
+      "answers": [
+        { "id": "A", "text": "France", "correct": false },
+        { "id": "B", "text": "Germany", "correct": false },
+        { "id": "C", "text": "Italy", "correct": true },
+        { "id": "D", "text": "Spain", "correct": false }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "What is the speed of light in vacuum (approximately)?",
+      "answers": [
+        { "id": "A", "text": "300,000 km/s", "correct": true },
+        { "id": "B", "text": "150,000 km/s", "correct": false },
+        { "id": "C", "text": "500,000 km/s", "correct": false },
+        { "id": "D", "text": "100,000 km/s", "correct": false }
+      ]
+    }
+  ]
+}
