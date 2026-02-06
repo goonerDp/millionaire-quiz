@@ -11,7 +11,7 @@ function QuizContent() {
   const router = useRouter();
   const [answersParam, setAnswersParam] = useQueryState(
     "answers",
-    parseAsString.withDefault(""),
+    parseAsString.withDefault("")
   );
 
   const answersByQuestion = parseAnswersString(answersParam);
@@ -118,7 +118,7 @@ function MultipleChoiceQuestion({
     setSelectedIds((prev) =>
       prev.has(id)
         ? new Set([...prev].filter((x) => x !== id))
-        : new Set([...prev, id]),
+        : new Set([...prev, id])
     );
   }
 

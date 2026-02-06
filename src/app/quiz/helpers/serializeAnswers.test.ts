@@ -14,9 +14,7 @@ describe("serializeAnswers", () => {
   });
 
   it("serializes multiple questions (comma-separated)", () => {
-    expect(
-      serializeAnswers([["A"], ["B"], ["A", "B", "C"]]),
-    ).toBe("A,B,A|B|C");
+    expect(serializeAnswers([["A"], ["B"], ["A", "B", "C"]])).toBe("A,B,A|B|C");
   });
 
   it("round-trips with parseAnswersString format", () => {

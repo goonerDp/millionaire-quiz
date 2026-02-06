@@ -51,18 +51,16 @@ describe("parseAnswersString", () => {
   });
 
   it("caps result at TOTAL_QUESTIONS questions", () => {
-    const many = Array.from({ length: TOTAL_QUESTIONS + 5 }, (_, i) => "X")
-      .join(",");
+    const many = Array.from(
+      { length: TOTAL_QUESTIONS + 5 },
+      (_, i) => "X"
+    ).join(",");
     const result = parseAnswersString(many);
     expect(result).toHaveLength(TOTAL_QUESTIONS);
     expect(result.every((q) => q.length === 1 && q[0] === "X")).toBe(true);
   });
 
   it("preserves order of questions and answers", () => {
-    expect(parseAnswersString("Z,Y,X|W")).toEqual([
-      ["Z"],
-      ["Y"],
-      ["X", "W"],
-    ]);
+    expect(parseAnswersString("Z,Y,X|W")).toEqual([["Z"], ["Y"], ["X", "W"]]);
   });
 });

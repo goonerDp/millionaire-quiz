@@ -10,7 +10,7 @@ export function parseAnswersString(value: string | null): string[][] {
         .trim()
         .split("|")
         .map((s) => s.trim())
-        .filter(Boolean),
+        .filter(Boolean)
     )
     .filter((ids) => ids.length > 0)
     .slice(0, TOTAL_QUESTIONS);
