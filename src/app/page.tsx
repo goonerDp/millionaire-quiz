@@ -1,13 +1,30 @@
 import LinkButton from "@/components/LinkButton";
+import styles from "./page.module.css";
+import Image from "next/image";
 
 export const dynamic = "force-static";
 
 function StartPage() {
   return (
-    <div>
-      <h1>Who Wants to Be a Millionaire?</h1>
-      <p>Answer 12 questions. One wrong answer and the game is over.</p>
-      <LinkButton href="/quiz">Start</LinkButton>
+    <div className={styles.root}>
+      <div className={styles.container}>
+        <div className={styles.imageWrapper}>
+          <Image
+            className={styles.image}
+            src="/images/thumb-up.svg"
+            alt="Thumb up"
+            loading="eager"
+            fill
+            sizes="(max-width: 1280px) 196px, 624px"
+          />
+        </div>
+        <div className={styles.content}>
+          <h1 className={styles.title}>Who wants to be a millionaire?</h1>
+          <LinkButton className={styles.button} href="/quiz">
+            Start
+          </LinkButton>
+        </div>
+      </div>
     </div>
   );
 }
