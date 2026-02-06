@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LinkButton from "@/components/LinkButton";
 
 export const dynamic = "force-static";
 
@@ -7,7 +7,7 @@ function StartPage() {
     <div>
       <h1>Who Wants to Be a Millionaire?</h1>
       <p>Answer 12 questions. One wrong answer and the game is over.</p>
-      <Link href="/quiz">Start</Link>
+      <LinkButton href="/quiz">Start</LinkButton>
     </div>
   );
 }

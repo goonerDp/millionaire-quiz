@@ -1,27 +1,30 @@
 @import "modern-normalize/modern-normalize.css";
 
 :root {
+  /* Respect user's browser default so rem scales with their font-size preference 100% = 1rem = 16px by default */
+  font-size: 100%;
+
   /* Orange */
-  --orange-120: #E87928;
-  --orange-100: #FF8B37;
-  --orange-80: #FFAC70;
-  --orange-5: #FFF3EB;
+  --orange-120: #e87928;
+  --orange-100: #ff8b37;
+  --orange-80: #ffac70;
+  --orange-5: #fff3eb;
 
   /* Green */
-  --green-100: #47D867;
-  --green-5: #E6FAEA;
+  --green-100: #47d867;
+  --green-5: #e6faea;
 
   /* Red */
-  --red-100: #EC6259;
-  --red-5: #FDEEED;
+  --red-100: #ec6259;
+  --red-5: #fdeeed;
 
   /* Black */
-  --black-100: #1C1C21;
-  --black-40: #D0D0D8;
-  --black-5: #F5F5F7;
+  --black-100: #1c1c21;
+  --black-40: #d0d0d8;
+  --black-5: #f5f5f7;
 
   /* White */
-  --white-100: #FFFFFF;
+  --white-100: #ffffff;
 }
 
 body {
