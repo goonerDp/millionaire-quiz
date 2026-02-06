@@ -3,6 +3,7 @@
   "questions": [
     {
       "id": 1,
+      "type": "single",
       "text": "What is the capital of France?",
       "answers": [
         { "id": "A", "text": "Berlin", "correct": false },
@@ -13,6 +14,7 @@
     },
     {
       "id": 2,
+      "type": "single",
       "text": "How many continents are there?",
       "answers": [
         { "id": "A", "text": "Five", "correct": false },
@@ -23,6 +25,7 @@
     },
     {
       "id": 3,
+      "type": "single",
       "text": "What is the largest planet in our solar system?",
       "answers": [
         { "id": "A", "text": "Mars", "correct": false },
@@ -33,16 +36,20 @@
     },
     {
       "id": 4,
-      "text": "In which year did World War II end?",
+      "type": "multiple",
+      "text": "Which are primary colors of light?",
       "answers": [
-        { "id": "A", "text": "1943", "correct": false },
-        { "id": "B", "text": "1944", "correct": false },
-        { "id": "C", "text": "1945", "correct": true },
-        { "id": "D", "text": "1946", "correct": false }
+        { "id": "A", "text": "Red", "correct": true },
+        { "id": "B", "text": "Green", "correct": true },
+        { "id": "C", "text": "Blue", "correct": true },
+        { "id": "D", "text": "Yellow", "correct": false },
+        { "id": "E", "text": "Orange", "correct": false },
+        { "id": "F", "text": "Purple", "correct": false }
       ]
     },
     {
       "id": 5,
+      "type": "single",
       "text": "What is the chemical symbol for gold?",
       "answers": [
         { "id": "A", "text": "Go", "correct": false },
@@ -53,6 +60,7 @@
     },
     {
       "id": 6,
+      "type": "single",
       "text": "Who wrote \"Romeo and Juliet\"?",
       "answers": [
         { "id": "A", "text": "Charles Dickens", "correct": false },
@@ -63,16 +71,16 @@
     },
     {
       "id": 7,
+      "type": "single",
       "text": "What is the smallest prime number?",
       "answers": [
-        { "id": "A", "text": "0", "correct": false },
-        { "id": "B", "text": "1", "correct": false },
-        { "id": "C", "text": "2", "correct": true },
-        { "id": "D", "text": "3", "correct": false }
+        { "id": "A", "text": "1", "correct": false },
+        { "id": "B", "text": "2", "correct": true }
       ]
     },
     {
       "id": 8,
+      "type": "single",
       "text": "Which ocean is the largest?",
       "answers": [
         { "id": "A", "text": "Atlantic", "correct": false },
@@ -83,6 +91,7 @@
     },
     {
       "id": 9,
+      "type": "single",
       "text": "How many sides does a hexagon have?",
       "answers": [
         { "id": "A", "text": "Five", "correct": false },
@@ -93,6 +102,7 @@
     },
     {
       "id": 10,
+      "type": "single",
       "text": "What is the longest river in the world?",
       "answers": [
         { "id": "A", "text": "Amazon", "correct": false },
@@ -103,6 +113,7 @@
     },
     {
       "id": 11,
+      "type": "single",
       "text": "In which country did the Renaissance begin?",
       "answers": [
         { "id": "A", "text": "France", "correct": false },
@@ -113,6 +124,7 @@
     },
     {
       "id": 12,
+      "type": "single",
       "text": "What is the speed of light in vacuum (approximately)?",
       "answers": [
         { "id": "A", "text": "300,000 km/s", "correct": true },
