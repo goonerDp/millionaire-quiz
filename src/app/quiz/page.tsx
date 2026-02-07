@@ -26,7 +26,7 @@ function QuizContent() {
   const prizes = gameConfig.prizes as number[];
 
   if (activeIndex >= TOTAL_QUESTIONS) {
-    router.replace(`/result?won=${prizes[TOTAL_QUESTIONS - 1]}`);
+    router.replace(`/result?earned=${prizes[TOTAL_QUESTIONS - 1]}`);
     return <p>Redirecting...</p>;
   }
 
@@ -41,7 +41,7 @@ function QuizContent() {
 
   function commitAnswer(answerIds: string[]) {
     if (activeIndex + 1 >= TOTAL_QUESTIONS) {
-      router.push(`/result?won=${prizes[TOTAL_QUESTIONS - 1]}`);
+      router.push(`/result?earned=${prizes[TOTAL_QUESTIONS - 1]}`);
       return;
     }
     const nextAnswers = [...answersByQuestion, answerIds];
@@ -52,7 +52,8 @@ function QuizContent() {
     const selected = question.answers.find((a) => a.id === selectedAnswerId);
     if (!selected) return;
     if (!selected.correct) {
-      router.push(`/result?lost=${activeIndex + 1}`);
+      const earned = activeIndex === 0 ? 0 : prizes[activeIndex - 1];
+      router.push(`/result?earned=${earned}`);
       return;
     }
     commitAnswer([selectedAnswerId]);
@@ -86,7 +87,10 @@ function QuizContent() {
       totalQuestions={TOTAL_QUESTIONS}
       currentPrize={currentPrize}
       correctIds={correctIds}
-      onWrong={() => router.push(`/result?lost=${activeIndex + 1}`)}
+      onWrong={() => {
+        const earned = activeIndex === 0 ? 0 : prizes[activeIndex - 1];
+        router.push(`/result?earned=${earned}`);
+      }}
       onCorrect={(answerIds) => commitAnswer(answerIds)}
     />
   );

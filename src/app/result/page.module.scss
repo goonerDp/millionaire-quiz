@@ -1,0 +1,90 @@
+@use "../../styles/breakpoints" as bp;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 1440px;
+  padding: 5rem 1rem 3rem;
+  gap: 1.5rem;
+
+  @include bp.min-md {
+    margin-inline: auto;
+    align-items: center;
+    padding: 0 2rem;
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  @include bp.min-lg {
+    padding: 0 5rem;
+  }
+}
+
+.imageWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 288px;
+  height: 192px;
+  margin-inline: auto;
+
+  @include bp.min-md {
+    width: 452px;
+    height: 357px;
+  }
+}
+
+.image {
+  display: block;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.title {
+  font-weight: 600;
+  text-align: center;
+  font-size: 2rem;
+  margin: 0;
+
+  @include bp.min-md {
+    font-size: 3.5rem;
+    text-align: left;
+    margin-bottom: 4rem;
+  }
+}
+
+.description {
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--gray-40);
+  margin-bottom: 0.5rem;
+
+  @include bp.min-md {
+    text-align: left;
+  }
+}
+
+.button {
+  margin-top: auto;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 28rem;
+
+  @include bp.min-md {
+    margin: 0;
+    max-width: 18.5rem;
+  }
+}

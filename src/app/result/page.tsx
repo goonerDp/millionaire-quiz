@@ -1,38 +1,46 @@
-import Link from "next/link";
+import LinkButton from "@/components/LinkButton";
+import styles from "./page.module.scss";
+import Image from "next/image";
+import { createLoader, parseAsInteger } from "nuqs/server";
+import type { SearchParams } from "nuqs/server";
+import { currencyFormatter } from "@/consts";
+
+const resultSearchParams = {
+  earned: parseAsInteger.withDefault(0),
+};
+const loadResultSearchParams = createLoader(resultSearchParams);
 
 type Props = {
-  searchParams: Promise<{ won?: string; lost?: string }>;
+  searchParams: Promise<SearchParams>;
 };
 
 export default async function ResultPage({ searchParams }: Props) {
-  const params = await searchParams;
-  const won = params.won != null ? Number(params.won) : null;
-  const lost = params.lost != null ? Number(params.lost) : null;
-
-  if (won != null && !Number.isNaN(won)) {
-    return (
-      <div>
-        <h1>You won!</h1>
-        <p>Your prize: {won.toLocaleString()}</p>
-        <Link href="/">Play again</Link>
-      </div>
-    );
-  }
-
-  if (lost != null && !Number.isNaN(lost)) {
-    return (
-      <div>
-        <h1>Wrong answer</h1>
-        <p>You lost on question {lost}.</p>
-        <Link href="/">Try again</Link>
-      </div>
-    );
-  }
+  const { earned } = await loadResultSearchParams(searchParams);
 
   return (
-    <div>
-      <p>No result data. Start a new game.</p>
-      <Link href="/">Start</Link>
+    <div className={styles.root}>
+      <div className={styles.container}>
+        {earned !== 0 && (
+          <div className={styles.imageWrapper}>
+            <Image
+              className={styles.image}
+              src="/images/thumb-up.svg"
+              alt="Thumb up"
+              fill
+              sizes="(max-width: 1280px) 196px, 624px"
+            />
+          </div>
+        )}
+        <div className={styles.content}>
+          <p className={styles.description}>Total score:</p>
+          <h1 className={styles.title}>
+            {currencyFormatter.format(earned)} earned
+          </h1>
+          <LinkButton className={styles.button} href="/quiz">
+            Play again
+          </LinkButton>
+        </div>
+      </div>
     </div>
   );
 }
