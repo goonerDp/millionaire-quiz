@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as mxs;
+
 .button {
   font-size: 0.875rem;
   line-height: 1.16;
@@ -23,9 +25,8 @@
   background: var(--orange-120);
 }
 
-/* Hover only on devices that support it (not touch/mobile) */
-@media (hover: hover) and (pointer: fine) {
-  .button:hover {
+.button:hover {
+  @include mxs.pointer-fine {
     background: var(--orange-80);
   }
 }

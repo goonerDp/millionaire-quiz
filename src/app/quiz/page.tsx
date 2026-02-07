@@ -6,6 +6,106 @@ import { useQueryState, parseAsString } from "nuqs";
 import gameConfig from "@/data/game-config.json";
 import { parseAnswersString, serializeAnswers } from "./helpers";
 import { TOTAL_QUESTIONS } from "./consts";
+import AnswerPicker, {
+  type AnswerPickerVariant,
+} from "./components/AnswerPicker";
+import styles from "./page.module.scss";
+
+type Question = {
+  id: number;
+  type?: "single" | "multiple";
+  text: string;
+  answers: Array<{ id: string; text: string; correct: boolean }>;
+};
+
+type QuestionBlockProps = {
+  question: Question;
+  answersByQuestion: string[][];
+  prizes: number[];
+  onCommit: (answerIds: string[]) => void;
+  onWrong: () => void;
+};
+
+function QuestionBlock({ question, onCommit, onWrong }: QuestionBlockProps) {
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const questionType = question.type ?? "single";
+
+  function isMultipleChoiceCorrect(ids: string[]): boolean {
+    const correctIds = new Set(
+      question.answers.filter((a) => a.correct).map((a) => a.id)
+    );
+    const selectedSet = new Set(ids);
+    return (
+      correctIds.size === selectedSet.size &&
+      [...selectedSet].every((id) => correctIds.has(id))
+    );
+  }
+
+  function handleSingleChange(answerId: string) {
+    const selected = question.answers.find((a) => a.id === answerId);
+    if (!selected) return;
+    if (!selected.correct) {
+      onWrong();
+      return;
+    }
+    onCommit([answerId]);
+  }
+
+  function handleMultipleChange(answerId: string) {
+    setSelectedIds((prev) =>
+      prev.includes(answerId)
+        ? prev.filter((id) => id !== answerId)
+        : [...prev, answerId]
+    );
+  }
+
+  function handleMultipleSubmit() {
+    if (!selectedIds.length) return;
+    if (!isMultipleChoiceCorrect(selectedIds)) {
+      onWrong();
+      return;
+    }
+    onCommit(selectedIds);
+  }
+
+  function getAnswerPickerVariant(a: {
+    id: string;
+  }): AnswerPickerVariant | undefined {
+    return selectedIds.includes(a.id) ? "selected" : undefined;
+  }
+
+  return (
+    <div className={styles.content}>
+      <h2 className={styles.title}>{question.text}</h2>
+      <ul className={styles.answersList}>
+        {question.answers.map((a) => (
+          <li key={a.id}>
+            <AnswerPicker
+              id={a.id}
+              text={a.text}
+              variant={getAnswerPickerVariant(a)}
+              onChange={
+                questionType === "single"
+                  ? handleSingleChange
+                  : handleMultipleChange
+              }
+            />
+          </li>
+        ))}
+      </ul>
+      {questionType === "multiple" && (
+        <button
+          type="button"
+          className={styles.confirmButton}
+          onClick={handleMultipleSubmit}
+          disabled={selectedIds.length === 0}
+        >
+          Confirm
+        </button>
+      )}
+    </div>
+  );
+}
 
 function QuizContent() {
   const router = useRouter();
@@ -17,12 +117,7 @@ function QuizContent() {
   const answersByQuestion = parseAnswersString(answersParam);
   const activeIndex = answersByQuestion.length;
 
-  const questions = gameConfig.questions as Array<{
-    id: number;
-    type?: "single" | "multiple";
-    text: string;
-    answers: Array<{ id: string; text: string; correct: boolean }>;
-  }>;
+  const questions = gameConfig.questions as Question[];
   const prizes = gameConfig.prizes as number[];
 
   if (activeIndex >= TOTAL_QUESTIONS) {
@@ -31,13 +126,6 @@ function QuizContent() {
   }
 
   const question = questions[activeIndex];
-  const questionType = question.type ?? "single";
-  const currentPrize = prizes[activeIndex];
-
-  const correctIds = question.answers
-    .filter((a) => a.correct)
-    .map((a) => a.id)
-    .sort();
 
   function commitAnswer(answerIds: string[]) {
     if (activeIndex + 1 >= TOTAL_QUESTIONS) {
@@ -48,122 +136,23 @@ function QuizContent() {
     setAnswersParam(serializeAnswers(nextAnswers));
   }
 
-  function handleSingleSubmit(selectedAnswerId: string) {
-    const selected = question.answers.find((a) => a.id === selectedAnswerId);
-    if (!selected) return;
-    if (!selected.correct) {
-      const earned = activeIndex === 0 ? 0 : prizes[activeIndex - 1];
-      router.push(`/result?earned=${earned}`);
-      return;
-    }
-    commitAnswer([selectedAnswerId]);
+  function handleWrong() {
+    const amount = activeIndex === 0 ? 0 : prizes[activeIndex - 1];
+    router.push(`/result?earned=${amount}`);
   }
 
-  if (questionType === "single") {
-    return (
-      <div>
-        <h1>
-          Question {activeIndex + 1} of {TOTAL_QUESTIONS}
-        </h1>
-        <p>Prize at stake: {currentPrize}</p>
-        <h2>{question.text}</h2>
-        <ul>
-          {question.answers.map((a) => (
-            <li key={a.id}>
-              <button type="button" onClick={() => handleSingleSubmit(a.id)}>
-                {a.id}. {a.text}
-              </button>
-            </li>
-          ))}
-        </ul>
+  return (
+    <div className={styles.root}>
+      <div className={styles.container}>
+        <QuestionBlock
+          key={activeIndex}
+          question={question}
+          answersByQuestion={answersByQuestion}
+          prizes={prizes}
+          onCommit={commitAnswer}
+          onWrong={handleWrong}
+        />
       </div>
-    );
-  }
-
-  return (
-    <MultipleChoiceQuestion
-      question={question}
-      activeIndex={activeIndex}
-      totalQuestions={TOTAL_QUESTIONS}
-      currentPrize={currentPrize}
-      correctIds={correctIds}
-      onWrong={() => {
-        const earned = activeIndex === 0 ? 0 : prizes[activeIndex - 1];
-        router.push(`/result?earned=${earned}`);
-      }}
-      onCorrect={(answerIds) => commitAnswer(answerIds)}
-    />
-  );
-}
-
-function MultipleChoiceQuestion({
-  question,
-  activeIndex,
-  totalQuestions,
-  currentPrize,
-  correctIds,
-  onWrong,
-  onCorrect,
-}: {
-  question: {
-    text: string;
-    answers: Array<{ id: string; text: string; correct: boolean }>;
-  };
-  activeIndex: number;
-  totalQuestions: number;
-  currentPrize: number;
-  correctIds: string[];
-  onWrong: () => void;
-  onCorrect: (answerIds: string[]) => void;
-}) {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-
-  function toggle(id: string) {
-    setSelectedIds((prev) =>
-      prev.has(id)
-        ? new Set([...prev].filter((x) => x !== id))
-        : new Set([...prev, id])
-    );
-  }
-
-  function handleSubmit() {
-    const sorted = [...selectedIds].sort();
-    if (sorted.join("|") !== correctIds.join("|")) {
-      onWrong();
-      return;
-    }
-    onCorrect(sorted);
-  }
-
-  return (
-    <div>
-      <h1>
-        Question {activeIndex + 1} of {totalQuestions}
-      </h1>
-      <p>Prize at stake: {currentPrize}</p>
-      <h2>{question.text}</h2>
-      <p>Select all that apply.</p>
-      <ul>
-        {question.answers.map((a) => (
-          <li key={a.id}>
-            <label>
-              <input
-                type="checkbox"
-                checked={selectedIds.has(a.id)}
-                onChange={() => toggle(a.id)}
-              />
-              {a.id}. {a.text}
-            </label>
-          </li>
-        ))}
-      </ul>
-      <button
-        type="button"
-        onClick={handleSubmit}
-        disabled={selectedIds.size === 0}
-      >
-        Submit
-      </button>
     </div>
   );
 }

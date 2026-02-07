@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import type { ComponentProps } from "react";
-import styles from "./LinkButton.module.css";
+import styles from "./LinkButton.module.scss";
 
 type LinkButtonProps = ComponentProps<typeof Link>;
 

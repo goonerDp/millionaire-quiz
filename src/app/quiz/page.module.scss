@@ -1,0 +1,68 @@
+@use "../../styles/breakpoints" as bp;
+@use "../../styles/mixins" as mxs;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--black-5);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 1440px;
+  padding-inline: 1rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  padding-top: 6rem;
+  flex-grow: 1;
+  padding-block-end: 1.5rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: center;
+
+  @include bp.min-md {
+    text-align: left;
+    font-size: 2rem;
+  }
+}
+
+.answersList {
+  display: grid;
+  row-gap: 0.5rem;
+  margin-block-start: auto;
+  overflow: visible;
+  margin-inline: -1rem;
+  max-width: mxs.rem(844);
+
+  @include bp.min-md {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 2rem;
+  }
+}
+
+.confirmButton {
+  margin-block-start: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white-100);
+  background: var(--orange-100);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.confirmButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

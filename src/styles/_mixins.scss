@@ -1,0 +1,10 @@
+// Convert pixels to rem (default base: 16px)
+@function rem($pixels, $context: 16) {
+  @return ($pixels / $context) * 1rem;
+}
+
+@mixin pointer-fine {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
