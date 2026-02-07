@@ -17,6 +17,8 @@
   border: none;
   cursor: pointer;
   outline: none;
+  color: var(--black-100);
+  -webkit-tap-highlight-color: transparent;
   transition:
     color 0.2s ease,
     background 0.2s ease;
