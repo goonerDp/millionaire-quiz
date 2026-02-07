@@ -1,7 +1,9 @@
+@use "../styles/breakpoints" as bp;
+
 .root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
   /* Diagonal split: white triangle (top-left), orange triangle (bottom-right) */
   background: linear-gradient(
     to bottom right,
@@ -19,14 +21,14 @@
   padding: 5rem 1rem 3rem;
   gap: 1.5rem;
 
-  @media (min-width: 768px) {
+  @include bp.min-md {
     align-items: center;
     padding: 0 2rem;
     flex-direction: row;
     gap: 2rem;
   }
 
-  @media (min-width: 1024px) {
+  @include bp.min-lg {
     padding: 0 5rem;
   }
 }
@@ -39,7 +41,7 @@
   height: 192px;
   margin-inline: auto;
 
-  @media (min-width: 768px) {
+  @include bp.min-md {
     width: 452px;
     height: 357px;
   }
@@ -62,7 +64,7 @@
   line-height: 1.16;
   margin: 0;
 
-  @media (min-width: 768px) {
+  @include bp.min-md {
     font-size: 3.5rem;
     text-align: left;
     margin-bottom: 4rem;
@@ -76,7 +78,7 @@
   width: 100%;
   max-width: 28rem;
 
-  @media (min-width: 768px) {
+  @include bp.min-md {
     margin: 0;
     max-width: 18.5rem;
   }

@@ -1,5 +1,5 @@
 import LinkButton from "@/components/LinkButton";
-import styles from "./page.module.css";
+import styles from "./page.module.scss";
 import Image from "next/image";
 
 export const dynamic = "force-static";
