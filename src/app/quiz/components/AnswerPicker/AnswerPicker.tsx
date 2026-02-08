@@ -10,6 +10,7 @@ export type Props = {
   id: string;
   text: string;
   variant?: AnswerPickerVariant;
+  pulsate?: boolean;
   onChange: (id: string) => void;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onChange" | "type">;
 
@@ -20,6 +21,7 @@ function AnswerPicker({
   id,
   text,
   variant,
+  pulsate,
   onChange,
   className,
   ...rest
@@ -30,6 +32,7 @@ function AnswerPicker({
       className={clsx(
         styles.button,
         variant && styles[variant],
+        pulsate && styles.pulsate,
         rest.disabled && styles.disabled,
         className
       )}

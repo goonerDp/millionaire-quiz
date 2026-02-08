@@ -74,6 +74,11 @@
   color: var(--black-100);
 }
 
+/* pulsate (used with selected during pending, or with correct/wrong) */
+.button.pulsate {
+  animation: pulsate 0.5s ease-in-out infinite;
+}
+
 @keyframes pulsate {
   0%,
   100% {
@@ -89,7 +94,6 @@
   --button-stroke: var(--green-100);
   --button-fill: var(--green-5);
   color: var(--black-100);
-  animation: pulsate 0.5s ease-in-out infinite;
 }
 
 /* wrong */
@@ -97,7 +101,6 @@
   --button-stroke: var(--red-100);
   --button-fill: var(--red-5);
   color: var(--black-100);
-  animation: pulsate 0.5s ease-in-out infinite;
 }
 
 /* disabled (after answer selected) */

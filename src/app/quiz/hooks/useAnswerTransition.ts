@@ -2,21 +2,33 @@
 
 import { useState, useEffect, useRef } from "react";
 
-const DEFAULT_DELAY_MS = 500;
+const DEFAULT_PENDING_MS = 500;
+const DEFAULT_REVEALED_MS = 1000;
 
-export type AnsweredSelection = {
-  answerIds: string[];
-  correct: boolean;
-};
+export type AnsweredSelection =
+  | {
+      phase: "pending";
+      answerIds: string[];
+      correct: boolean;
+      correctAnswerIds: string[];
+    }
+  | {
+      phase: "revealed";
+      answerIds: string[];
+      correct: boolean;
+      correctAnswerIds: string[];
+    };
 
 type Options = {
-  delayMs?: number;
+  pendingDelayMs?: number;
+  revealedDelayMs?: number;
   onCorrect: (answerIds: string[]) => void;
   onWrong: () => void;
 };
 
 export function useAnswerTransition({
-  delayMs = DEFAULT_DELAY_MS,
+  pendingDelayMs = DEFAULT_PENDING_MS,
+  revealedDelayMs = DEFAULT_REVEALED_MS,
   onCorrect,
   onWrong,
 }: Options) {
@@ -32,6 +44,20 @@ export function useAnswerTransition({
 
   useEffect(() => {
     if (!answeredSelection) return;
+
+    if (answeredSelection.phase === "pending") {
+      const timer = setTimeout(() => {
+        setAnsweredSelection({
+          phase: "revealed",
+          answerIds: answeredSelection.answerIds,
+          correct: answeredSelection.correct,
+          correctAnswerIds: answeredSelection.correctAnswerIds,
+        });
+      }, pendingDelayMs);
+      return () => clearTimeout(timer);
+    }
+
+    // phase === "revealed"
     const timer = setTimeout(() => {
       if (answeredSelection.correct) {
         onCorrectRef.current(answeredSelection.answerIds);
@@ -39,19 +65,41 @@ export function useAnswerTransition({
         onWrongRef.current();
       }
       setAnsweredSelection(null);
-    }, delayMs);
+    }, revealedDelayMs);
     return () => clearTimeout(timer);
-  }, [answeredSelection, delayMs]);
+  }, [answeredSelection, pendingDelayMs, revealedDelayMs]);
 
-  function selectAnswer(answerId: string, correct: boolean) {
+  function selectAnswer(
+    answerId: string,
+    correct: boolean,
+    correctAnswerIds: string[]
+  ) {
     setAnsweredSelection((prev) =>
-      prev ? prev : { answerIds: [answerId], correct }
+      prev
+        ? prev
+        : {
+            phase: "pending",
+            answerIds: [answerId],
+            correct,
+            correctAnswerIds,
+          }
     );
   }
 
-  function selectAnswers(answerIds: string[], correct: boolean) {
+  function selectAnswers(
+    answerIds: string[],
+    correct: boolean,
+    correctAnswerIds: string[]
+  ) {
     setAnsweredSelection((prev) =>
-      prev ? prev : { answerIds, correct }
+      prev
+        ? prev
+        : {
+            phase: "pending",
+            answerIds,
+            correct,
+            correctAnswerIds,
+          }
     );
   }
 

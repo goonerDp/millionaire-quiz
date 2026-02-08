@@ -53,7 +53,8 @@ function QuizContent() {
 
   const { answeredSelection, selectAnswer, selectAnswers, isTransitioning } =
     useAnswerTransition({
-      delayMs: 500,
+      pendingDelayMs: 500,
+      revealedDelayMs: 1000,
       onCorrect: commitAnswer,
       onWrong: handleWrong,
     });
@@ -66,10 +67,12 @@ function QuizContent() {
   const question = questions[activeIndex];
   const questionType = question.type ?? "single";
 
+  const correctAnswerIds = question.answers
+    .filter((a) => a.correct)
+    .map((a) => a.id);
+
   function isMultipleChoiceCorrect(ids: string[]): boolean {
-    const correctIds = new Set(
-      question.answers.filter((a) => a.correct).map((a) => a.id)
-    );
+    const correctIds = new Set(correctAnswerIds);
     const selectedSet = new Set(ids);
     return (
       correctIds.size === selectedSet.size &&
@@ -80,7 +83,7 @@ function QuizContent() {
   function handleSingleChange(answerId: string) {
     const selected = question.answers.find((a) => a.id === answerId);
     if (!selected || isTransitioning) return;
-    selectAnswer(answerId, selected.correct);
+    selectAnswer(answerId, selected.correct, correctAnswerIds);
   }
 
   function handleMultipleChange(answerId: string) {
@@ -94,18 +97,40 @@ function QuizContent() {
 
   function handleMultipleSubmit() {
     if (!selectedIds.length || isTransitioning) return;
-    selectAnswers(selectedIds, isMultipleChoiceCorrect(selectedIds));
+    selectAnswers(
+      selectedIds,
+      isMultipleChoiceCorrect(selectedIds),
+      correctAnswerIds
+    );
   }
 
   function getAnswerPickerVariant(a: {
     id: string;
   }): AnswerPickerVariant | undefined {
-    if (answeredSelection && answeredSelection.answerIds.includes(a.id)) {
-      return answeredSelection.correct ? "correct" : "wrong";
+    if (!answeredSelection) {
+      return questionType === "multiple" && selectedIds.includes(a.id)
+        ? "selected"
+        : undefined;
     }
-    return questionType === "multiple" && selectedIds.includes(a.id)
-      ? "selected"
-      : undefined;
+    if (answeredSelection.phase === "pending") {
+      return answeredSelection.answerIds.includes(a.id)
+        ? "selected"
+        : undefined;
+    }
+    // revealed: show all correct answers in green, wrong selections in red
+    if (answeredSelection.correctAnswerIds.includes(a.id)) {
+      return "correct";
+    }
+    if (answeredSelection.answerIds.includes(a.id)) {
+      return "wrong";
+    }
+    return undefined;
+  }
+
+  function getAnswerPickerPulsate(a: { id: string }): boolean {
+    if (!answeredSelection || answeredSelection.phase !== "pending")
+      return false;
+    return answeredSelection.answerIds.includes(a.id);
   }
 
   return (
@@ -133,6 +158,7 @@ function QuizContent() {
                     id={a.id}
                     text={a.text}
                     variant={getAnswerPickerVariant(a)}
+                    pulsate={getAnswerPickerPulsate(a)}
                     disabled={isTransitioning}
                     onChange={
                       questionType === "single"
