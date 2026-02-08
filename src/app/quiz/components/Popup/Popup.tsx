@@ -5,20 +5,20 @@ import type { ReactNode } from "react";
 import styles from "./Popup.module.scss";
 
 export type Props = {
-  open: boolean;
+  isOpen: boolean;
   onClose: () => void;
   title: string;
   children: ReactNode;
 };
 
-function Popup({ open, onClose, title, children }: Props) {
+function Popup({ isOpen, onClose, title, children }: Props) {
   return (
     <div
-      className={clsx(styles.overlay, open && styles.overlayOpen)}
+      className={clsx(styles.overlay, isOpen && styles.overlayOpen)}
       role="dialog"
       aria-modal="true"
       aria-label={title}
-      inert={open ? undefined : true}
+      inert={isOpen ? undefined : true}
     >
       <div className={styles.backdrop} onClick={onClose} />
       <div className={styles.panel}>

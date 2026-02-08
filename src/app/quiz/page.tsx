@@ -32,7 +32,7 @@ function QuizContent() {
     parseAsString.withDefault("")
   );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [ladderOpen, setLadderOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const answersByQuestion = parseAnswersString(answersParam);
   const activeIndex = answersByQuestion.length;
@@ -41,17 +41,21 @@ function QuizContent() {
   const prizes = gameConfig.prizes as number[];
 
   function commitAnswer(answerIds: string[]) {
+    const nextAnswers = [...answersByQuestion, answerIds];
+
     setSelectedIds([]);
+
     if (activeIndex + 1 >= TOTAL_QUESTIONS) {
       router.push(`/result?earned=${prizes[TOTAL_QUESTIONS - 1]}`);
       return;
     }
-    const nextAnswers = [...answersByQuestion, answerIds];
+
     setAnswersParam(serializeAnswers(nextAnswers));
   }
 
   function handleWrong() {
     const amount = activeIndex === 0 ? 0 : prizes[activeIndex - 1];
+
     router.push(`/result?earned=${amount}`);
   }
 
@@ -65,23 +69,30 @@ function QuizContent() {
 
   if (activeIndex >= TOTAL_QUESTIONS) {
     router.replace(`/result?earned=${prizes[TOTAL_QUESTIONS - 1]}`);
-    return <p>Redirecting...</p>;
+
+    return null;
   }
 
   const question = questions[activeIndex];
   const questionType = question.type ?? "single";
   const correctAnswerIds = question.answers
-    .filter((a) => a.correct)
-    .map((a) => a.id);
+    .filter((answer) => answer.correct)
+    .map((answer) => answer.id);
 
   function handleSingleChange(answerId: string) {
-    const selected = question.answers.find((a) => a.id === answerId);
-    if (!selected || isTransitioning) return;
+    const selected = question.answers.find((answer) => answer.id === answerId);
+
+    if (!selected || isTransitioning) {
+      return;
+    }
     selectAnswer(answerId, selected.correct, correctAnswerIds);
   }
 
   function handleMultipleChange(answerId: string) {
-    if (isTransitioning) return;
+    if (isTransitioning) {
+      return;
+    }
+
     setSelectedIds((prev) =>
       prev.includes(answerId)
         ? prev.filter((id) => id !== answerId)
@@ -90,7 +101,10 @@ function QuizContent() {
   }
 
   function handleMultipleSubmit() {
-    if (!selectedIds.length || isTransitioning) return;
+    if (!selectedIds.length || isTransitioning) {
+      return;
+    }
+
     selectAnswers(
       selectedIds,
       getIsMultipleChoiceCorrect(selectedIds, correctAnswerIds),
@@ -134,7 +148,7 @@ function QuizContent() {
         <div className={styles.wrapperStart}>
           <div className={styles.container}>
             <header className={styles.header}>
-              <BurgerButton onClick={() => setLadderOpen(true)} />
+              <BurgerButton onClick={() => setIsPopupOpen(true)} />
             </header>
             <h2 className={styles.title}>{question.text}</h2>
             <ul className={styles.answersList}>
@@ -172,8 +186,8 @@ function QuizContent() {
         </div>
       </div>
       <Popup
-        open={ladderOpen}
-        onClose={() => setLadderOpen(false)}
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
         title="Prize ladder"
       >
         <PriceLadder prizes={prizes} activeIndex={activeIndex} />
