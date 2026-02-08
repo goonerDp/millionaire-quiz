@@ -10,9 +10,12 @@
   background: var(--orange-100);
   color: var(--white-100);
   text-decoration: none;
-  transition: background 0.15s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
   border-radius: 0.5rem;
   font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
 
   @media (min-width: 768px) {
     border-radius: 0.75rem;
@@ -23,6 +26,7 @@
 
 .button:active {
   background: var(--orange-120);
+  transform: scale(0.98);
 }
 
 .button:hover {
