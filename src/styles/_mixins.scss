@@ -1,6 +1,8 @@
+@use "sass:math";
+
 // Convert pixels to rem (default base: 16px)
 @function rem($pixels, $context: 16) {
-  @return ($pixels / $context) * 1rem;
+  @return math.div($pixels, $context) * 1rem;
 }
 
 @mixin pointer-fine {
