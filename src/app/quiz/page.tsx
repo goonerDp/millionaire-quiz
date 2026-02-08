@@ -9,6 +9,7 @@ import { TOTAL_QUESTIONS } from "./consts";
 import AnswerPicker, {
   type AnswerPickerVariant,
 } from "./components/AnswerPicker";
+import { useAnswerTransition } from "./hooks/useAnswerTransition";
 import { Popup, PriceLadder } from "./components";
 import Button from "@/components/Button";
 import styles from "./page.module.scss";
@@ -35,13 +36,6 @@ function QuizContent() {
   const questions = gameConfig.questions as Question[];
   const prizes = gameConfig.prizes as number[];
 
-  if (activeIndex >= TOTAL_QUESTIONS) {
-    router.replace(`/result?earned=${prizes[TOTAL_QUESTIONS - 1]}`);
-    return <p>Redirecting...</p>;
-  }
-
-  const question = questions[activeIndex];
-
   function commitAnswer(answerIds: string[]) {
     setSelectedIds([]);
     if (activeIndex + 1 >= TOTAL_QUESTIONS) {
@@ -57,6 +51,19 @@ function QuizContent() {
     router.push(`/result?earned=${amount}`);
   }
 
+  const { answeredSelection, selectAnswer, selectAnswers, isTransitioning } =
+    useAnswerTransition({
+      delayMs: 500,
+      onCorrect: commitAnswer,
+      onWrong: handleWrong,
+    });
+
+  if (activeIndex >= TOTAL_QUESTIONS) {
+    router.replace(`/result?earned=${prizes[TOTAL_QUESTIONS - 1]}`);
+    return <p>Redirecting...</p>;
+  }
+
+  const question = questions[activeIndex];
   const questionType = question.type ?? "single";
 
   function isMultipleChoiceCorrect(ids: string[]): boolean {
@@ -72,15 +79,12 @@ function QuizContent() {
 
   function handleSingleChange(answerId: string) {
     const selected = question.answers.find((a) => a.id === answerId);
-    if (!selected) return;
-    if (!selected.correct) {
-      handleWrong();
-      return;
-    }
-    commitAnswer([answerId]);
+    if (!selected || isTransitioning) return;
+    selectAnswer(answerId, selected.correct);
   }
 
   function handleMultipleChange(answerId: string) {
+    if (isTransitioning) return;
     setSelectedIds((prev) =>
       prev.includes(answerId)
         ? prev.filter((id) => id !== answerId)
@@ -89,18 +93,19 @@ function QuizContent() {
   }
 
   function handleMultipleSubmit() {
-    if (!selectedIds.length) return;
-    if (!isMultipleChoiceCorrect(selectedIds)) {
-      handleWrong();
-      return;
-    }
-    commitAnswer(selectedIds);
+    if (!selectedIds.length || isTransitioning) return;
+    selectAnswers(selectedIds, isMultipleChoiceCorrect(selectedIds));
   }
 
   function getAnswerPickerVariant(a: {
     id: string;
   }): AnswerPickerVariant | undefined {
-    return selectedIds.includes(a.id) ? "selected" : undefined;
+    if (answeredSelection && answeredSelection.answerIds.includes(a.id)) {
+      return answeredSelection.correct ? "correct" : "wrong";
+    }
+    return questionType === "multiple" && selectedIds.includes(a.id)
+      ? "selected"
+      : undefined;
   }
 
   return (
@@ -128,6 +133,7 @@ function QuizContent() {
                     id={a.id}
                     text={a.text}
                     variant={getAnswerPickerVariant(a)}
+                    disabled={isTransitioning}
                     onChange={
                       questionType === "single"
                         ? handleSingleChange
@@ -142,7 +148,7 @@ function QuizContent() {
                 type="button"
                 className={styles.confirmButton}
                 onClick={handleMultipleSubmit}
-                disabled={selectedIds.length === 0}
+                disabled={selectedIds.length === 0 || isTransitioning}
               >
                 Confirm
               </Button>

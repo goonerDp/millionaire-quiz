@@ -27,7 +27,12 @@ function AnswerPicker({
   return (
     <button
       type="button"
-      className={clsx(styles.button, variant && styles[variant], className)}
+      className={clsx(
+        styles.button,
+        variant && styles[variant],
+        rest.disabled && styles.disabled,
+        className
+      )}
       onClick={() => onChange(id)}
       {...rest}
     >
