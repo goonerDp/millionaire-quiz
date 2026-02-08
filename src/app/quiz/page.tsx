@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryState, parseAsString } from "nuqs";
 import gameConfig from "@/data/game-config.json";
@@ -196,4 +196,10 @@ function QuizContent() {
   );
 }
 
-export default QuizContent;
+export default function QuizPage() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <QuizContent />
+    </Suspense>
+  );
+}
