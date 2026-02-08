@@ -1,4 +1,5 @@
 @use "../../styles/breakpoints" as bp;
+@use "../../styles/mixins" as mxs;
 
 .root {
   display: flex;
@@ -10,7 +11,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  max-width: 1440px;
+  max-width: mxs.rem(1440);
   padding: 5rem 1rem 3rem;
   gap: 1.5rem;
 
@@ -31,13 +32,13 @@
   position: relative;
   display: flex;
   justify-content: center;
-  width: 288px;
-  height: 192px;
+  width: mxs.rem(288);
+  height: mxs.rem(192);
   margin-inline: auto;
 
   @include bp.min-md {
-    width: 452px;
-    height: 357px;
+    width: mxs.rem(452);
+    height: mxs.rem(357);
   }
 }
 

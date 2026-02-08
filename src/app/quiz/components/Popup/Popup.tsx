@@ -18,7 +18,6 @@ function Popup({ open, onClose, title, children }: Props) {
       role="dialog"
       aria-modal="true"
       aria-label={title}
-      aria-hidden={!open}
       inert={open ? undefined : true}
     >
       <div className={styles.backdrop} onClick={onClose} />

@@ -1,16 +1,20 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryState, parseAsString } from "nuqs";
 import gameConfig from "@/data/game-config.json";
-import { parseAnswersString, serializeAnswers } from "./helpers";
+import {
+  getIsMultipleChoiceCorrect,
+  parseAnswersString,
+  serializeAnswers,
+} from "./helpers";
 import { TOTAL_QUESTIONS } from "./consts";
 import AnswerPicker, {
   type AnswerPickerVariant,
 } from "./components/AnswerPicker";
 import { useAnswerTransition } from "./hooks/useAnswerTransition";
-import { Popup, PriceLadder } from "./components";
+import { BurgerButton, Popup, PriceLadder } from "./components";
 import Button from "@/components/Button";
 import styles from "./page.module.scss";
 
@@ -66,19 +70,9 @@ function QuizContent() {
 
   const question = questions[activeIndex];
   const questionType = question.type ?? "single";
-
   const correctAnswerIds = question.answers
     .filter((a) => a.correct)
     .map((a) => a.id);
-
-  function isMultipleChoiceCorrect(ids: string[]): boolean {
-    const correctIds = new Set(correctAnswerIds);
-    const selectedSet = new Set(ids);
-    return (
-      correctIds.size === selectedSet.size &&
-      [...selectedSet].every((id) => correctIds.has(id))
-    );
-  }
 
   function handleSingleChange(answerId: string) {
     const selected = question.answers.find((a) => a.id === answerId);
@@ -99,38 +93,39 @@ function QuizContent() {
     if (!selectedIds.length || isTransitioning) return;
     selectAnswers(
       selectedIds,
-      isMultipleChoiceCorrect(selectedIds),
+      getIsMultipleChoiceCorrect(selectedIds, correctAnswerIds),
       correctAnswerIds
     );
   }
 
-  function getAnswerPickerVariant(a: {
+  function getAnswerPickerVariant(answer: {
     id: string;
   }): AnswerPickerVariant | undefined {
     if (!answeredSelection) {
-      return questionType === "multiple" && selectedIds.includes(a.id)
+      return questionType === "multiple" && selectedIds.includes(answer.id)
         ? "selected"
         : undefined;
     }
     if (answeredSelection.phase === "pending") {
-      return answeredSelection.answerIds.includes(a.id)
+      return answeredSelection.answerIds.includes(answer.id)
         ? "selected"
         : undefined;
     }
     // revealed: show all correct answers in green, wrong selections in red
-    if (answeredSelection.correctAnswerIds.includes(a.id)) {
+    if (answeredSelection.correctAnswerIds.includes(answer.id)) {
       return "correct";
     }
-    if (answeredSelection.answerIds.includes(a.id)) {
+    if (answeredSelection.answerIds.includes(answer.id)) {
       return "wrong";
     }
     return undefined;
   }
 
-  function getAnswerPickerPulsate(a: { id: string }): boolean {
-    if (!answeredSelection || answeredSelection.phase !== "pending")
+  function getAnswerPickerPulsate(answer: { id: string }): boolean {
+    if (!answeredSelection || answeredSelection.phase !== "pending") {
       return false;
-    return answeredSelection.answerIds.includes(a.id);
+    }
+    return answeredSelection.answerIds.includes(answer.id);
   }
 
   return (
@@ -139,26 +134,17 @@ function QuizContent() {
         <div className={styles.wrapperStart}>
           <div className={styles.container}>
             <header className={styles.header}>
-              <button
-                type="button"
-                className={styles.burgerButton}
-                onClick={() => setLadderOpen(true)}
-                aria-label="Open prize ladder"
-              >
-                <span className={styles.burgerLine} />
-                <span className={styles.burgerLine} />
-                <span className={styles.burgerLine} />
-              </button>
+              <BurgerButton onClick={() => setLadderOpen(true)} />
             </header>
             <h2 className={styles.title}>{question.text}</h2>
             <ul className={styles.answersList}>
-              {question.answers.map((a) => (
-                <li key={a.id}>
+              {question.answers.map((answer) => (
+                <li key={answer.id}>
                   <AnswerPicker
-                    id={a.id}
-                    text={a.text}
-                    variant={getAnswerPickerVariant(a)}
-                    pulsate={getAnswerPickerPulsate(a)}
+                    id={answer.id}
+                    text={answer.text}
+                    variant={getAnswerPickerVariant(answer)}
+                    pulsate={getAnswerPickerPulsate(answer)}
                     disabled={isTransitioning}
                     onChange={
                       questionType === "single"
@@ -196,10 +182,4 @@ function QuizContent() {
   );
 }
 
-export default function QuizPage() {
-  return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <QuizContent />
-    </Suspense>
-  );
-}
+export default QuizContent;
