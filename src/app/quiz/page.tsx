@@ -42,6 +42,7 @@ function QuizContent() {
   const question = questions[activeIndex];
 
   function commitAnswer(answerIds: string[]) {
+    setSelectedIds([]);
     if (activeIndex + 1 >= TOTAL_QUESTIONS) {
       router.push(`/result?earned=${prizes[TOTAL_QUESTIONS - 1]}`);
       return;
