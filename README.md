@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Millionaire Quiz
+
+A quiz game with 12 questions. Question data is in `src/data/game-config.json`:
+
+- **Prizes** – cash ladder for each level.
+- **Questions** – each has `id`, `type` (`"single"` = one correct answer, `"multiple"` = several correct), `text`, and `answers` (each with `id`, `text`, `correct`).
+
 ## Getting Started
 
 First, run the development server:
