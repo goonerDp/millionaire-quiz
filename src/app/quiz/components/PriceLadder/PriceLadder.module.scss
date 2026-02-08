@@ -1,0 +1,78 @@
+@use "../../../../styles/breakpoints" as bp;
+@use "../../../../styles/mixins" as mxs;
+
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  margin-block-start: auto;
+
+  @include bp.min-lg {
+    margin-block: auto;
+    padding-block: 2rem;
+    justify-content: center;
+  }
+}
+
+.row {
+  width: 100%;
+}
+
+.step {
+  --step-stroke: var(--black-40);
+  --step-fill: var(--white-100);
+
+  position: relative;
+  width: 100%;
+  height: 2rem;
+
+  @include bp.min-md {
+    height: 2.5rem;
+  }
+}
+
+.stepActive {
+  --step-stroke: var(--orange-100);
+}
+
+.stepSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.stepStroke,
+.stepShape {
+  transition:
+    stroke 0.2s ease,
+    fill 0.2s ease;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--black-100);
+  transition: color 0.2s ease;
+
+  .stepActive & {
+    color: var(--orange-100);
+  }
+
+  .stepAnswered & {
+    color: var(--black-40);
+  }
+
+  @include bp.min-lg {
+    font-size: 1rem;
+  }
+}

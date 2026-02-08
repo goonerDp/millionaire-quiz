@@ -9,6 +9,7 @@ import { TOTAL_QUESTIONS } from "./consts";
 import AnswerPicker, {
   type AnswerPickerVariant,
 } from "./components/AnswerPicker";
+import { Popup, PriceLadder } from "./components";
 import styles from "./page.module.scss";
 
 type Question = {
@@ -25,6 +26,7 @@ function QuizContent() {
     parseAsString.withDefault("")
   );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [ladderOpen, setLadderOpen] = useState(false);
 
   const answersByQuestion = parseAnswersString(answersParam);
   const activeIndex = answersByQuestion.length;
@@ -105,7 +107,16 @@ function QuizContent() {
         <div className={styles.wrapperStart}>
           <div className={styles.container}>
             <header className={styles.header}>
-              {/* TODO: display burger menu here */}
+              <button
+                type="button"
+                className={styles.burgerButton}
+                onClick={() => setLadderOpen(true)}
+                aria-label="Open prize ladder"
+              >
+                <span className={styles.burgerLine} />
+                <span className={styles.burgerLine} />
+                <span className={styles.burgerLine} />
+              </button>
             </header>
             <h2 className={styles.title}>{question.text}</h2>
             <ul className={styles.answersList}>
@@ -124,6 +135,7 @@ function QuizContent() {
                 </li>
               ))}
             </ul>
+            {/* TODO: style confirm button */}
             {questionType === "multiple" && (
               <button
                 type="button"
@@ -137,9 +149,16 @@ function QuizContent() {
           </div>
         </div>
         <div className={styles.wrapperEnd}>
-          {/* TODO: display ladder with prizes here */}
+          <PriceLadder prizes={prizes} activeIndex={activeIndex} />
         </div>
       </div>
+      <Popup
+        open={ladderOpen}
+        onClose={() => setLadderOpen(false)}
+        title="Prize ladder"
+      >
+        <PriceLadder prizes={prizes} activeIndex={activeIndex} />
+      </Popup>
     </div>
   );
 }
