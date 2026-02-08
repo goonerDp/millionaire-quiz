@@ -10,6 +10,7 @@ import AnswerPicker, {
   type AnswerPickerVariant,
 } from "./components/AnswerPicker";
 import { Popup, PriceLadder } from "./components";
+import Button from "@/components/Button";
 import styles from "./page.module.scss";
 
 type Question = {
@@ -136,16 +137,15 @@ function QuizContent() {
                 </li>
               ))}
             </ul>
-            {/* TODO: style confirm button */}
             {questionType === "multiple" && (
-              <button
+              <Button
                 type="button"
                 className={styles.confirmButton}
                 onClick={handleMultipleSubmit}
                 disabled={selectedIds.length === 0}
               >
                 Confirm
-              </button>
+              </Button>
             )}
           </div>
         </div>

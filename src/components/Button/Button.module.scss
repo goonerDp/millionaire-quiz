@@ -1,0 +1,38 @@
+@use "../../styles/mixins" as mxs;
+
+.button {
+  height: 3rem;
+  padding-inline: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  line-height: 1.16;
+  font-weight: 600;
+  background: var(--orange-100);
+  color: var(--white-100);
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+  border-radius: 0.5rem;
+  -webkit-tap-highlight-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.button:active {
+  background: var(--orange-120);
+  transform: scale(0.98);
+}
+
+.button:hover {
+  @include mxs.pointer-fine {
+    background: var(--orange-80);
+  }
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
