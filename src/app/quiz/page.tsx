@@ -18,101 +18,13 @@ type Question = {
   answers: Array<{ id: string; text: string; correct: boolean }>;
 };
 
-type QuestionBlockProps = {
-  question: Question;
-  answersByQuestion: string[][];
-  prizes: number[];
-  onCommit: (answerIds: string[]) => void;
-  onWrong: () => void;
-};
-
-function QuestionBlock({ question, onCommit, onWrong }: QuestionBlockProps) {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const questionType = question.type ?? "single";
-
-  function isMultipleChoiceCorrect(ids: string[]): boolean {
-    const correctIds = new Set(
-      question.answers.filter((a) => a.correct).map((a) => a.id)
-    );
-    const selectedSet = new Set(ids);
-    return (
-      correctIds.size === selectedSet.size &&
-      [...selectedSet].every((id) => correctIds.has(id))
-    );
-  }
-
-  function handleSingleChange(answerId: string) {
-    const selected = question.answers.find((a) => a.id === answerId);
-    if (!selected) return;
-    if (!selected.correct) {
-      onWrong();
-      return;
-    }
-    onCommit([answerId]);
-  }
-
-  function handleMultipleChange(answerId: string) {
-    setSelectedIds((prev) =>
-      prev.includes(answerId)
-        ? prev.filter((id) => id !== answerId)
-        : [...prev, answerId]
-    );
-  }
-
-  function handleMultipleSubmit() {
-    if (!selectedIds.length) return;
-    if (!isMultipleChoiceCorrect(selectedIds)) {
-      onWrong();
-      return;
-    }
-    onCommit(selectedIds);
-  }
-
-  function getAnswerPickerVariant(a: {
-    id: string;
-  }): AnswerPickerVariant | undefined {
-    return selectedIds.includes(a.id) ? "selected" : undefined;
-  }
-
-  return (
-    <div className={styles.content}>
-      <h2 className={styles.title}>{question.text}</h2>
-      <ul className={styles.answersList}>
-        {question.answers.map((a) => (
-          <li key={a.id}>
-            <AnswerPicker
-              id={a.id}
-              text={a.text}
-              variant={getAnswerPickerVariant(a)}
-              onChange={
-                questionType === "single"
-                  ? handleSingleChange
-                  : handleMultipleChange
-              }
-            />
-          </li>
-        ))}
-      </ul>
-      {questionType === "multiple" && (
-        <button
-          type="button"
-          className={styles.confirmButton}
-          onClick={handleMultipleSubmit}
-          disabled={selectedIds.length === 0}
-        >
-          Confirm
-        </button>
-      )}
-    </div>
-  );
-}
-
 function QuizContent() {
   const router = useRouter();
   const [answersParam, setAnswersParam] = useQueryState(
     "answers",
     parseAsString.withDefault("")
   );
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const answersByQuestion = parseAnswersString(answersParam);
   const activeIndex = answersByQuestion.length;
@@ -141,17 +53,92 @@ function QuizContent() {
     router.push(`/result?earned=${amount}`);
   }
 
+  const questionType = question.type ?? "single";
+
+  function isMultipleChoiceCorrect(ids: string[]): boolean {
+    const correctIds = new Set(
+      question.answers.filter((a) => a.correct).map((a) => a.id)
+    );
+    const selectedSet = new Set(ids);
+    return (
+      correctIds.size === selectedSet.size &&
+      [...selectedSet].every((id) => correctIds.has(id))
+    );
+  }
+
+  function handleSingleChange(answerId: string) {
+    const selected = question.answers.find((a) => a.id === answerId);
+    if (!selected) return;
+    if (!selected.correct) {
+      handleWrong();
+      return;
+    }
+    commitAnswer([answerId]);
+  }
+
+  function handleMultipleChange(answerId: string) {
+    setSelectedIds((prev) =>
+      prev.includes(answerId)
+        ? prev.filter((id) => id !== answerId)
+        : [...prev, answerId]
+    );
+  }
+
+  function handleMultipleSubmit() {
+    if (!selectedIds.length) return;
+    if (!isMultipleChoiceCorrect(selectedIds)) {
+      handleWrong();
+      return;
+    }
+    commitAnswer(selectedIds);
+  }
+
+  function getAnswerPickerVariant(a: {
+    id: string;
+  }): AnswerPickerVariant | undefined {
+    return selectedIds.includes(a.id) ? "selected" : undefined;
+  }
+
   return (
     <div className={styles.root}>
-      <div className={styles.container}>
-        <QuestionBlock
-          key={activeIndex}
-          question={question}
-          answersByQuestion={answersByQuestion}
-          prizes={prizes}
-          onCommit={commitAnswer}
-          onWrong={handleWrong}
-        />
+      <div className={styles.wrapper}>
+        <div className={styles.wrapperStart}>
+          <div className={styles.container}>
+            <header className={styles.header}>
+              {/* TODO: display burger menu here */}
+            </header>
+            <h2 className={styles.title}>{question.text}</h2>
+            <ul className={styles.answersList}>
+              {question.answers.map((a) => (
+                <li key={a.id}>
+                  <AnswerPicker
+                    id={a.id}
+                    text={a.text}
+                    variant={getAnswerPickerVariant(a)}
+                    onChange={
+                      questionType === "single"
+                        ? handleSingleChange
+                        : handleMultipleChange
+                    }
+                  />
+                </li>
+              ))}
+            </ul>
+            {questionType === "multiple" && (
+              <button
+                type="button"
+                className={styles.confirmButton}
+                onClick={handleMultipleSubmit}
+                disabled={selectedIds.length === 0}
+              >
+                Confirm
+              </button>
+            )}
+          </div>
+        </div>
+        <div className={styles.wrapperEnd}>
+          {/* TODO: display ladder with prizes here */}
+        </div>
       </div>
     </div>
   );
