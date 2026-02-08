@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import type { ReactNode } from "react";
 import styles from "./Popup.module.scss";
 
@@ -11,14 +12,14 @@ export type Props = {
 };
 
 function Popup({ open, onClose, title, children }: Props) {
-  if (!open) return null;
-
   return (
     <div
-      className={styles.overlay}
+      className={clsx(styles.overlay, open && styles.overlayOpen)}
       role="dialog"
       aria-modal="true"
       aria-label={title}
+      aria-hidden={!open}
+      inert={open ? undefined : true}
     >
       <div className={styles.backdrop} onClick={onClose} />
       <div className={styles.panel}>

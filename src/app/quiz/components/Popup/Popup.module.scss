@@ -8,6 +8,12 @@
   align-items: center;
   justify-content: center;
   padding: 0;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    visibility 0s linear 0.2s;
 
   @include bp.min-sm {
     padding: 1rem;
@@ -15,6 +21,13 @@
 
   @include bp.min-lg {
     display: none;
+  }
+
+  &.overlayOpen {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.2s ease;
   }
 }
 
