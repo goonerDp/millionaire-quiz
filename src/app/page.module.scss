@@ -66,9 +66,12 @@
   margin: 0;
 
   @include bp.min-md {
-    font-size: 3.5rem;
     text-align: left;
     margin-bottom: 4rem;
+  }
+
+  @include bp.min-lg {
+    font-size: 3.5rem;
   }
 }
 
