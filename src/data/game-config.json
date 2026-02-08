@@ -39,15 +39,13 @@
     },
     {
       "id": 4,
-      "type": "multiple",
-      "text": "Which are primary colors of light?",
+      "type": "single",
+      "text": "Which planet is known as the Red Planet?",
       "answers": [
-        { "id": "A", "text": "Red", "correct": true },
-        { "id": "B", "text": "Green", "correct": true },
-        { "id": "C", "text": "Blue", "correct": true },
-        { "id": "D", "text": "Yellow", "correct": false },
-        { "id": "E", "text": "Orange", "correct": false },
-        { "id": "F", "text": "Purple", "correct": false }
+        { "id": "A", "text": "Venus", "correct": false },
+        { "id": "B", "text": "Mars", "correct": true },
+        { "id": "C", "text": "Jupiter", "correct": false },
+        { "id": "D", "text": "Saturn", "correct": false }
       ]
     },
     {
@@ -77,8 +75,10 @@
       "type": "single",
       "text": "What is the smallest prime number?",
       "answers": [
-        { "id": "A", "text": "1", "correct": false },
-        { "id": "B", "text": "2", "correct": true }
+        { "id": "A", "text": "0", "correct": false },
+        { "id": "B", "text": "1", "correct": false },
+        { "id": "C", "text": "2", "correct": true },
+        { "id": "D", "text": "3", "correct": false }
       ]
     },
     {
