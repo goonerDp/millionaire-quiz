@@ -1,10 +1,11 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryState, parseAsString } from "nuqs";
 import gameConfig from "@/data/game-config.json";
 import {
+  arePreviousAnswersValid,
   getIsMultipleChoiceCorrect,
   parseAnswersString,
   serializeAnswers,
@@ -40,6 +41,16 @@ function QuizContent() {
   const questions = gameConfig.questions as Question[];
   const prizes = gameConfig.prizes as number[];
 
+  const previousAnswersValid =
+    answersByQuestion.length === 0 ||
+    arePreviousAnswersValid(answersByQuestion, questions);
+
+  useEffect(() => {
+    if (!previousAnswersValid) {
+      router.replace("/quiz");
+    }
+  }, [previousAnswersValid, router]);
+
   function commitAnswer(answerIds: string[]) {
     const nextAnswers = [...answersByQuestion, answerIds];
 
@@ -67,9 +78,10 @@ function QuizContent() {
       onWrong: handleWrong,
     });
 
-  if (activeIndex >= TOTAL_QUESTIONS) {
-    router.replace(`/result?earned=${prizes[TOTAL_QUESTIONS - 1]}`);
-
+  if (!previousAnswersValid || activeIndex >= TOTAL_QUESTIONS) {
+    if (activeIndex >= TOTAL_QUESTIONS) {
+      router.replace(`/result?earned=${prizes[TOTAL_QUESTIONS - 1]}`);
+    }
     return null;
   }
 
