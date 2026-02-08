@@ -19,7 +19,8 @@
   -webkit-tap-highlight-color: transparent;
   transition:
     color 0.2s ease,
-    background 0.2s ease;
+    background 0.2s ease,
+    transform 0.15s ease;
 
   @include bp.min-md {
     height: 72px;
@@ -59,6 +60,11 @@
     color: var(--black-100);
     --button-stroke: var(--orange-100);
   }
+}
+
+.button:active {
+  transform: scale(0.98);
+  --button-fill: var(--black-5);
 }
 
 /* selected */
